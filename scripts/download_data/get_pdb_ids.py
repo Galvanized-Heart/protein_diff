@@ -1,6 +1,7 @@
 import requests
 import json
 from tqdm import tqdm
+import rootutils
 
 # Define the search query based on Boltz-1 criteria
 SEARCH_REQUEST = {
@@ -88,7 +89,9 @@ if __name__ == "__main__":
     ids = get_pdb_ids()
     
     if ids:
-        output_file = "pdb_ids.txt"
+        root_path = rootutils.find_root(indicator=".project-root")
+        output_file = root_path / "data" / "pdb" / "pdb_ids.txt"
+        output_file.parent.mkdir(parents=True, exist_ok=True)
         with open(output_file, "w") as f:
             for pdb_id in ids:
                 f.write(f"{pdb_id}\n")
