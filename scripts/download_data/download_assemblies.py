@@ -27,13 +27,13 @@ async def download_file(session, url: str, path: Path):
     except Exception as e:
         return url, f"Failed ({type(e).__name__})"
 
-async def main(input_file: str, output_dir: str, limit: int):
+async def main(input_file: str, limit: int):
     """Main function to orchestrate the download process."""
     root_path = rootutils.find_root(indicator=".project-root")
-    output_path = root_path / "data" / "pdb" / "assemblies"
+    output_path = root_path / "data" / "pdb" / "raw" / "assemblies"
     log_path = output_path / "download_log.txt"
     input_file_path = root_path / input_file
-    output_path.mkdir(exist_ok=True)
+    output_path.mkdir(parents=True, exist_ok=True)
     
     # Read PDB IDs from the input file
     with open(input_file, "r") as f:
@@ -89,7 +89,6 @@ async def main(input_file: str, output_dir: str, limit: int):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Batch download biological assemblies from the RCSB PDB.")
     parser.add_argument("-f", "--input-file", type=str, required=True, help="Path to the text file containing PDB IDs, one per line.")
-    parser.add_argument("-o", "--output-dir", type=str, default="data/pdb/assemblies", help="Directory to save downloaded files.")
     parser.add_argument("-l", "--limit", type=int, default=100, help="Maximum number of concurrent downloads.")
     
     args = parser.parse_args()
@@ -97,4 +96,4 @@ if __name__ == "__main__":
     if os.name == 'nt':
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         
-    asyncio.run(main(args.input_file, args.output_dir, args.limit))
+    asyncio.run(main(args.input_file, args.limit))

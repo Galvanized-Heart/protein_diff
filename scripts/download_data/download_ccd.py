@@ -1,11 +1,12 @@
 import requests
 import os
 from pathlib import Path
+import rootutils
 
 def download_ccd():
     """Downloads the full Chemical Component Dictionary from the PDB archive."""
     root_path = rootutils.find_root(indicator=".project-root")
-    output_dir = root_path / "data" / "pdb" / "ccd"
+    output_dir = root_path / "data" / "pdb" / "raw" / "ccd"
     output_dir.mkdir(parents=True, exist_ok=True)
     
     url = "https://files.rcsb.org/pub/pdb/data/monomers/components.cif.gz"
